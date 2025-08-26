@@ -11,6 +11,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const onMovieClick = (movie: Pick<Movie, 'id' | 'title' | 'poster_path'>) => {
     console.log('Movie clicked:', movie)
   }
+
   return (
     <div
       className="movie-item"
