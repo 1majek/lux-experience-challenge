@@ -1,20 +1,16 @@
 import React, { useRef } from 'react'
 import './Carousel.scss'
-
-export interface Movie {
-  id: number
-  title: string
-  poster_path: string
-  [key: string]: string | number | undefined
-}
+import type { Movie } from '../../api/movies/interfaces'
+import MovieCard from '../movie-card/MovieCard'
 
 interface CarouselProps {
-  movies: Movie[]
-  onMovieClick: (movie: Movie) => void
+  movies: Movie[],
+  isLoading: boolean,
+  isError: boolean,
   title?: string
 }
 
-const Carousel: React.FC<CarouselProps> = ({ movies, onMovieClick, title }) => {
+const Carousel: React.FC<CarouselProps> = ({ movies, title, isLoading, isError }) => {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const scroll = (direction: 'left' | 'right') => {
@@ -27,35 +23,28 @@ const Carousel: React.FC<CarouselProps> = ({ movies, onMovieClick, title }) => {
     }
   }
 
+  if (isLoading) return <div>Loading {title}...</div>
+  if (isError) return <div>Error loading {title}.</div>
+
   return (
-    <div className="carousel">
-      {title && <h3 className="carousel-title">{title}</h3>}
-      <button className="carousel-btn left" onClick={() => scroll('left')} aria-label="Scroll left">
-        &#8592;
-      </button>
-      <div className="carousel-track" ref={scrollRef}>
-        {movies.map((movie) => (
-          <div
-            className="carousel-item"
-            key={movie.id}
-            onClick={() => onMovieClick(movie)}
-            tabIndex={0}
-            role="button"
-            aria-label={movie.title}
-          >
-            <img
-              src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
-              alt={movie.title}
-              className="carousel-poster"
-            />
-            <div className="carousel-title">{movie.title}</div>
+    <section className="carousel-section">
+      <h2>{title}</h2>
+      <div className="carousel-placeholder">
+        <div className="carousel">
+          <button className="carousel-btn left" onClick={() => scroll('left')} aria-label="Scroll left">
+            &#8592;
+          </button>
+          <div className="carousel-track" ref={scrollRef}>
+            {movies.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))}
           </div>
-        ))}
+          <button className="carousel-btn right" onClick={() => scroll('right')} aria-label="Scroll right">
+            &#8594;
+          </button>
+        </div>
       </div>
-      <button className="carousel-btn right" onClick={() => scroll('right')} aria-label="Scroll right">
-        &#8594;
-      </button>
-    </div>
+    </section>
   )
 }
 
