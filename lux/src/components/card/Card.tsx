@@ -3,6 +3,7 @@ import './Card.scss'
 import type { CastMember, Movie } from '../../api/movies/interfaces'
 import { useNavigate } from 'react-router-dom'
 import placeholderImage from './../../assets/placeholder-img.png'
+import { useMovieContext } from '../../hooks/useMovieContext'
 
 interface CardProps {
   content: Pick<Movie, 'id' | 'title' | 'poster_path'> | CastMember
@@ -11,8 +12,10 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ content, category }) => {
   const navigate = useNavigate()
+  const { addMovie } = useMovieContext()
 
   const onMovieClick = (movieId: number) => {
+    addMovie(content as Movie)
     navigate(`/movie/${movieId}`, { state: { category } })
   }
 

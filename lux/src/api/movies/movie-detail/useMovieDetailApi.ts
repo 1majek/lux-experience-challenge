@@ -10,7 +10,7 @@ export const useMovieDetailApi = (id?: string) => {
 
   return {
     ...result,
-    movie: result.data || null,
+    movieDetail: result.data || null,
     isLoading: result.isLoading,
     isError: result.isError,
   }
