@@ -1,0 +1,82 @@
+.movie-detail-page {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  flex-direction: column;
+  gap: 2rem;
+  min-height: 100vh;
+
+  &.popular {
+    font-family: "Arial", sans-serif;
+    .add-to-wishlist-btn {
+      background: #0074d9;
+      color: #fff;
+    }
+  }
+  &.top-rated {
+    font-family: "Georgia", serif;
+    .add-to-wishlist-btn {
+      background: #cc2e2e;
+      color: #fff;
+    }
+  }
+  &.upcoming {
+    font-family: "Verdana", sans-serif;
+    .add-to-wishlist-btn {
+      background: #e3d803;
+      color: #000000;
+    }
+  }
+}
+
+.movie-detail-container {
+  // position: absolute;
+  // top: 0;
+  display: flex;
+  width: 100%;
+  height: "inherit";
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  background-color: rgba(5, 5, 5, 0.8);
+  padding-bottom: 2rem;
+}
+
+.movie-detail-poster {
+  display: flex;
+  max-width: 300px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-left: 2rem;
+}
+
+.movie-detail-info {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  margin-right: 2rem;
+}
+
+.movie-detail-overview {
+  font-size: 1.1rem;
+}
+
+.add-to-wishlist-btn {
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+}
+
+@media (max-width: 700px) {
+  .movie-detail-container {
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+  .movie-detail-poster {
+    width: 90vw;
+    max-width: 320px;
+  }
+}

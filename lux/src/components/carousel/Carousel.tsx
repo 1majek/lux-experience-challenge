@@ -1,16 +1,14 @@
 import React, { useRef } from 'react'
 import './Carousel.scss'
-import type { Movie } from '../../api/movies/interfaces'
-import MovieCard from '../movie-card/MovieCard'
 
 interface CarouselProps {
-  movies: Movie[],
   isLoading: boolean,
   isError: boolean,
-  title?: string
+  title: string,
+  children?: React.ReactNode
 }
 
-const Carousel: React.FC<CarouselProps> = ({ movies, title, isLoading, isError }) => {
+const Carousel: React.FC<CarouselProps> = ({ title, isLoading, isError, children }) => {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const scroll = (direction: 'left' | 'right') => {
@@ -28,16 +26,14 @@ const Carousel: React.FC<CarouselProps> = ({ movies, title, isLoading, isError }
 
   return (
     <section className="carousel-section">
-      <h2>{title}</h2>
+      <h2 className='carousel-title'>{title}</h2>
       <div className="carousel-placeholder">
         <div className="carousel">
           <button className="carousel-btn left" onClick={() => scroll('left')} aria-label="Scroll left">
             &#8592;
           </button>
           <div className="carousel-track" ref={scrollRef}>
-            {movies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} />
-            ))}
+            {children}
           </div>
           <button className="carousel-btn right" onClick={() => scroll('right')} aria-label="Scroll right">
             &#8594;
