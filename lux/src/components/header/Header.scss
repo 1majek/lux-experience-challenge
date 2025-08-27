@@ -1,0 +1,66 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #1c1c1c;
+  position: sticky;
+  z-index: 3;
+  top: 0;
+
+  &:hover {
+    box-shadow: 0px 2px 15px rgba(225, 13, 13, 0.356);
+  }
+
+  &__logo {
+    h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #e50914;
+      text-decoration: none;
+      text-decoration: none;
+    }
+  }
+
+  &__nav {
+    .header__wishlist-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+
+      &:hover {
+        .header__wishlist-count {
+          transform: scale(1.2);
+        }
+        color: #e50914;
+      }
+
+      .header__wishlist-icon-container {
+        position: relative;
+      }
+
+      .header__wishlist-count {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background-color: #e50914;
+        color: white;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: bold;
+      }
+    }
+  }
+}

@@ -38,6 +38,7 @@ const Card: React.FC<CardProps> = ({ content, category }) => {
       tabIndex={0}
       role="button"
       aria-label={movie?.title || cast?.name}
+      title={movie?.title || cast?.name}
     >
       {(movie?.poster_path || cast?.profile_path) ? (
         <img

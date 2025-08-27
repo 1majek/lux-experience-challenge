@@ -1,0 +1,93 @@
+.wishlist-page {
+  padding: 2rem 4rem;
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: left;
+    border-bottom: 1px solid #333;
+    padding-bottom: 1rem;
+    color: #363333;
+  }
+
+  .empty-wishlist {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .browse-movies-btn {
+    color: #363333;
+    &:hover {
+      color: #e50914;
+    }
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: #aaa;
+    text-align: center;
+    margin-top: 5rem;
+  }
+
+  .clear-wishlist-btn {
+    background-color: #363333;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    margin-bottom: 2rem;
+    display: block;
+    margin-left: auto;
+    margin-right: 0;
+
+    &:hover {
+      background-color: #f40612;
+    }
+  }
+
+  .wishlist-movies {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+
+    .wishlist-item {
+      display: flex;
+      flex-direction: column;
+      background-color: #181818;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      }
+
+      .remove-btn {
+        // background-color: #333;s
+        color: white;
+        border: none;
+        padding: 0.75rem;
+        font-size: 0.9rem;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.2s ease;
+        text-transform: uppercase;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+        border-radius: 0%;
+
+        &:hover {
+          background-color: #e50914;
+        }
+      }
+    }
+  }
+}

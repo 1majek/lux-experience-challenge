@@ -6,6 +6,8 @@ import MovieDetailPage from './pages/movie-detail/MovieDetailPage'
 import { StrictMode } from 'react'
 import { Provider } from 'react-redux'
 import { store } from './store'
+import Header from './components/header/Header'
+import WishListPage from './pages/wish-list/WishList'
 
 const queryClient = new QueryClient()
 
@@ -15,9 +17,11 @@ function App() {
     <StrictMode>
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
+          <Header />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/movie/:id" element={<MovieDetailPage />} />
+            <Route path="/wishlist" element={<WishListPage />} />
           </Routes>
         </QueryClientProvider>
       </Provider>
