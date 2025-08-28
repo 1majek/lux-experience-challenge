@@ -8,7 +8,6 @@ import Card from '../../components/card/Card'
 import { useMovieContext } from '../../hooks/useMovieContext'
 import { useWishListContext } from '../../hooks/useWishListContext'
 
-
 const MovieDetailPage: React.FC = () => {
   const location = useLocation();
   const { id } = useParams<{ id?: string }>()
@@ -77,6 +76,7 @@ const MovieDetailPage: React.FC = () => {
           <Card key={cast.id} content={cast} />
         ))}
       </Carousel>
+
     </div>
   )
 }
