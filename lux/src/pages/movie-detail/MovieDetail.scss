@@ -1,95 +1,94 @@
 .movie-detail-page {
-  display: flex;
-  margin: 0;
-  padding: 0;
-  flex-direction: column;
-  gap: 2rem;
-  min-height: 100vh;
+  .movie-detail-header {
+    display: flex;
+    position: relative;
+    padding: 4rem 2rem;
 
-  &.popular {
-    font-family: "Arial", sans-serif;
-    .add-to-wishlist-btn {
-      background: #0074d9;
-      color: #fff;
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1;
     }
   }
-  &.top-rated {
-    font-family: "Georgia", serif;
-    .add-to-wishlist-btn {
-      background: #cc2e2e;
-      color: #fff;
-    }
-  }
-  &.upcoming {
-    font-family: "Verdana", sans-serif;
-    .add-to-wishlist-btn {
-      background: #e3d803;
-      color: #000000;
-    }
-  }
-}
 
-.movie-detail-container {
-  display: flex;
-  width: 100%;
-  height: "inherit";
-  justify-content: space-around;
-  align-items: center;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  background-color: rgba(5, 5, 5, 0.8);
-  padding-bottom: 2rem;
-}
-
-.movie-detail-poster {
-  display: flex;
-  max-width: 300px;
-  border-radius: 10px;
-  object-fit: cover;
-  margin-left: 2rem;
-}
-
-.movie-detail-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 600px;
-  margin-right: 2rem;
-}
-
-.movie-detail-overview {
-  font-size: 1.1rem;
-}
-
-.action-buttons {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-}
-
-.add-to-wishlist-btn {
-  padding: 0.7rem 1.5rem;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  outline: none;
-}
-
-.wishlist-icon {
-  cursor: pointer;
-  &:hover {
-    color: white;
-    transition: border-color 0.25s ease-in-out;
-  }
-}
-
-@media (max-width: 700px) {
   .movie-detail-container {
-    flex-direction: column;
-    align-items: center;
-    padding: 1rem;
+    display: flex;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    z-index: 2;
+    position: relative;
+    color: #fff;
   }
+
   .movie-detail-poster {
-    width: 90vw;
-    max-width: 320px;
+    width: 300px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+    &:hover {
+      transform: scale(1.05);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+  }
+
+  .movie-detail-info {
+    max-width: 600px;
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .movie-detail-overview {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    p {
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .action-buttons {
+    margin-top: 1.5rem;
+
+    .add-to-wishlist-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      font-weight: bold;
+      background-color: rgb(225, 225, 225);
+      color: #111;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+
+      &.popular {
+        background-color: yellow;
+      }
+
+      &.top-rated {
+        background-color: rgb(96, 96, 171);
+      }
+
+      &.upcoming {
+        background-color: pink;
+      }
+
+      &:hover {
+        background-color: white;
+        transform: scale(1.05);
+      }
+
+      .wishlist-icon-btn {
+        color: #cc2e2e;
+      }
+    }
   }
 }

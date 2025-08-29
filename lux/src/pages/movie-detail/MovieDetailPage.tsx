@@ -1,21 +1,24 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { useMovieDetailApi } from '../../api/movies/movie-detail/useMovieDetailApi'
 import { popularMoviesTitle, topRatedMoviesTitle, upcomingMoviesTitle } from '../../utils'
-import './MovieDetail.scss'
 import Carousel from '../../components/carousel/Carousel'
 import Card from '../../components/card/Card'
-import { useMovieContext } from '../../hooks/useMovieContext'
 import { useWishListContext } from '../../hooks/useWishListContext'
 import WishlistIcon from '../../components/WishlistIcon'
+import Loading from '../../components/loading/Loading'
+import ErrorDisplay from '../../components/error/ErrorDisplay/ErrorDisplay'
+import placeholderImage from '../../assets/placeholder-img.png'
+import { useMovieContext } from '../../hooks/useMovieContext'
+import './MovieDetail.scss'
 
 const MovieDetailPage: React.FC = () => {
   const location = useLocation();
   const { id } = useParams<{ id?: string }>()
-  const { category } = location.state
+  const category = location.state?.category
 
-  const { selectedMovie } = useMovieContext()
   const { wishList, addWishList, removeWishList } = useWishListContext()
+  const { selectedMovie } = useMovieContext()
 
   const { movieDetail, isLoading, error } = useMovieDetailApi(id)
 
@@ -23,7 +26,7 @@ const MovieDetailPage: React.FC = () => {
     return wishList.some((movie) => movie.id === Number(id))
   }, [id, wishList])
 
-  const handleAddToWishList = () => {
+  const handleToggleWishList = useCallback(() => {
     if (isInWishList) {
       removeWishList(Number(id))
       return
@@ -32,7 +35,7 @@ const MovieDetailPage: React.FC = () => {
     if (selectedMovie) {
       addWishList(selectedMovie)
     }
-  }
+  }, [isInWishList, removeWishList, id, addWishList, selectedMovie]);
 
   // Conditional styling based on movie rating
   const categoryClass = useMemo(() => {
@@ -46,27 +49,31 @@ const MovieDetailPage: React.FC = () => {
     }
   }, [category]);
 
+  if (isLoading) {
+    return <Loading />;
+  }
 
-  if (isLoading) return <div>Loading...</div>
-  if (error || !movieDetail) return <div>Movie not found.</div>
+  if (error || !movieDetail) {
+    return <ErrorDisplay message="Could not load movie. Please try again later." />;
+  }
 
   // Set dynamic background style
   const backgroundStyle = movieDetail.backdrop_path
     ? {
       backgroundImage: `url(https://image.tmdb.org/t/p/original${movieDetail.backdrop_path})`,
-      backgroundSize: categoryClass == "popular" ? 'auto' : "cover",
+      backgroundSize: categoryClass === "popular" ? 'auto' : "cover",
       backgroundPosition: categoryClass === "upcoming" ? 'top' : 'bottom',
       backgroundRepeat: 'no-repeat',
     }
     : {}
 
   return (
-    <div className={`movie-detail-page ${categoryClass}`}>
-      <div style={backgroundStyle}>
+    <div className="movie-detail-page">
+      <div className="movie-detail-header" style={backgroundStyle}>
         <div className='movie-detail-container'>
           <img
             className="movie-detail-poster"
-            src={`https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`}
+            src={movieDetail.poster_path ? `https://image.tmdb.org/t/p/w500${movieDetail.poster_path}` : placeholderImage}
             alt={movieDetail.title}
           />
 
@@ -74,18 +81,24 @@ const MovieDetailPage: React.FC = () => {
             <h1>{movieDetail.title}</h1>
             <p className="movie-detail-overview">{movieDetail.overview}</p>
             <p><strong>Release Date:</strong> {movieDetail.release_date}</p>
-            <p><strong>Rating:</strong> {movieDetail.vote_average} / 10</p>
+            <p><strong>Rating:</strong> {movieDetail.vote_average.toFixed(1)} / 10</p>
             <div className='action-buttons'>
-              <button className="add-to-wishlist-btn" onClick={handleAddToWishList}>
-                {isInWishList ? 'Remove from Wishlist' : 'Add to Wishlist'}
+              <button className={`add-to-wishlist-btn ${categoryClass}`} onClick={handleToggleWishList}>
+                <span>{isInWishList ? 'In Wishlist' : 'Add to Wishlist'}</span>
+                <WishlistIcon
+                  className="wishlist-icon-btn"
+                  height={18}
+                  width={18}
+                  strokeWidth='2'
+                  fill={isInWishList ? 'currentColor' : 'none'}
+                />
               </button>
-              <WishlistIcon onClick={handleAddToWishList} className='wishlist-icon' height={30} width={30} strokeWidth='2' fill={isInWishList ? '#cc2e2e' : 'none'} />
             </div>
           </div>
         </div>
       </div>
 
-      <Carousel title='Casts' isLoading={isLoading} isError={Boolean(error)}>
+      <Carousel title='Casts' isLoading={isLoading}>
         {movieDetail?.credits.cast.map((cast) => (
           <Card key={cast.id} content={cast} />
         ))}

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import './Card.scss'
 import type { CastMember, Movie } from '../../api/movies/interfaces'
 import { useNavigate } from 'react-router-dom'
@@ -10,47 +10,57 @@ interface CardProps {
   category?: string,
 }
 
+// Type guard to check if content is a Movie
+function isMovie(content: CardProps['content']): content is Pick<Movie, 'id' | 'title' | 'poster_path'> {
+  return 'title' in content;
+}
+
 const Card: React.FC<CardProps> = ({ content, category }) => {
   const navigate = useNavigate()
   const { addMovie } = useMovieContext()
 
-  const onMovieClick = (movieId: number) => {
-    addMovie(content as Movie)
-    navigate(`/movie/${movieId}`, { state: { category } })
+  // Normalize content to a consistent shape for easier use in JSX
+  const normalized = {
+    id: content.id,
+    title: isMovie(content) ? content.title : content.name,
+    imagePath: isMovie(content) ? content.poster_path : content.profile_path,
+    isClickable: isMovie(content),
   }
 
-  const [movie, cast] = useMemo(() => {
-    let movie: Pick<Movie, 'id' | 'title' | 'poster_path'> | null = null;
-    let cast: CastMember | null = null;
-    if ('title' in content) {
-      movie = content as Pick<Movie, 'id' | 'title' | 'poster_path'>
-    } else {
-      cast = content as CastMember
+  const imageUrl = normalized.imagePath
+    ? `https://image.tmdb.org/t/p/w200${normalized.imagePath}`
+    : placeholderImage;
+
+  const handleCardClick = () => {
+    if (normalized.isClickable) {
+      addMovie(content as Movie)
+      navigate(`/movie/${normalized.id}`, { state: { category } })
     }
-    return [movie, cast]
-  }, [content])
+  }
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleCardClick();
+    }
+  }
 
   return (
     <div
       className="card-item"
-      key={movie?.id || cast?.id}
-      onClick={movie?.id ? () => onMovieClick(movie?.id) : undefined}
+      onClick={handleCardClick}
+      onKeyDown={handleKeyDown}
       tabIndex={0}
       role="button"
-      aria-label={movie?.title || cast?.name}
-      title={movie?.title || cast?.name}
+      aria-label={normalized.title}
+      title={normalized.title}
     >
-      {(movie?.poster_path || cast?.profile_path) ? (
-        <img
-          src={`https://image.tmdb.org/t/p/w200${movie?.poster_path ?? cast?.profile_path}`}
-          alt={movie?.title || cast?.name}
-          className="card-poster"
-        />
-      ) : (
-        <img src={placeholderImage} alt="Placeholder" className="card-poster" />
-      )}
-
-      <div className="card-title">{movie?.title || cast?.name}</div>
+      <img
+        src={imageUrl}
+        alt={normalized.title || 'Poster'}
+        className="card-poster"
+      />
+      <div className="card-title">{normalized.title}</div>
     </div>
   )
 }
