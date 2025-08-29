@@ -1,38 +1,43 @@
 import React from 'react'
-import './Home.scss'
-import Carousel from '../../components/carousel/Carousel'
 import { usePopularMoviesApi } from '../../api/movies/popular/usePopularMoviesApi'
 import { useTopRatedMoviesApi } from '../../api/movies/top-rated/useTopRatedMoviesApi'
 import { useUpcomingMoviesApi } from '../../api/movies/upcoming/useUpcomingMoviesApi'
 import { popularMoviesTitle, topRatedMoviesTitle, upcomingMoviesTitle } from '../../utils'
-import Card from '../../components/card/Card'
+import MovieCarousel from '../../components/MovieCarousel'
+import './Home.scss'
 
 const Home: React.FC = () => {
+  const popular = usePopularMoviesApi();
+  const topRated = useTopRatedMoviesApi();
+  const upcoming = useUpcomingMoviesApi();
 
-  const { popularMovies, isPopularMoviesLoading, isPopularMoviesError } = usePopularMoviesApi();
-  const { topRatedMovies, isTopRatedMoviesLoading, isTopRatedMoviesError } = useTopRatedMoviesApi();
-  const { upcomingMovies, isUpcomingMoviesLoading, isUpcomingMoviesError } = useUpcomingMoviesApi();
+  const carousels = [
+    {
+      title: popularMoviesTitle,
+      movies: popular.popularMovies,
+      isLoading: popular.isPopularMoviesLoading,
+      isError: popular.isPopularMoviesError,
+    },
+    {
+      title: topRatedMoviesTitle,
+      movies: topRated.topRatedMovies,
+      isLoading: topRated.isTopRatedMoviesLoading,
+      isError: topRated.isTopRatedMoviesError,
+    },
+    {
+      title: upcomingMoviesTitle,
+      movies: upcoming.upcomingMovies,
+      isLoading: upcoming.isUpcomingMoviesLoading,
+      isError: upcoming.isUpcomingMoviesError,
+    },
+  ];
 
   return (
     <div className="home-page">
       <h1>Browse Movies</h1>
-      <Carousel title={popularMoviesTitle} isLoading={isPopularMoviesLoading} isError={isPopularMoviesError}>
-        {popularMovies.map((movie) => (
-          <Card key={movie.id} content={movie} category={popularMoviesTitle} />
-        ))}
-      </Carousel>
-
-      <Carousel title={topRatedMoviesTitle} isLoading={isTopRatedMoviesLoading} isError={isTopRatedMoviesError}>
-        {topRatedMovies.map((topMovies) => (
-          <Card key={topMovies.id} content={topMovies} category={topRatedMoviesTitle} />
-        ))}
-      </Carousel>
-
-      <Carousel title={upcomingMoviesTitle} isLoading={isUpcomingMoviesLoading} isError={isUpcomingMoviesError}>
-        {upcomingMovies.map((upcomingMovies) => (
-          <Card key={upcomingMovies.id} content={upcomingMovies} category={upcomingMoviesTitle} />
-        ))}
-      </Carousel>
+      {carousels.map((carousel) => (
+        <MovieCarousel key={carousel.title} {...carousel} />
+      ))}
     </div>
   )
 }
