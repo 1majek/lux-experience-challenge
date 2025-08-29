@@ -30,8 +30,6 @@
 }
 
 .movie-detail-container {
-  // position: absolute;
-  // top: 0;
   display: flex;
   width: 100%;
   height: "inherit";
@@ -53,6 +51,7 @@
 .movie-detail-info {
   display: flex;
   flex-direction: column;
+  align-items: center;
   max-width: 600px;
   margin-right: 2rem;
 }
@@ -61,12 +60,26 @@
   font-size: 1.1rem;
 }
 
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
 .add-to-wishlist-btn {
   padding: 0.7rem 1.5rem;
   border: none;
   border-radius: 6px;
   font-size: 1rem;
   outline: none;
+}
+
+.wishlist-icon {
+  cursor: pointer;
+  &:hover {
+    color: white;
+    transition: border-color 0.25s ease-in-out;
+  }
 }
 
 @media (max-width: 700px) {

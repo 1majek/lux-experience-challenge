@@ -7,6 +7,7 @@ import Carousel from '../../components/carousel/Carousel'
 import Card from '../../components/card/Card'
 import { useMovieContext } from '../../hooks/useMovieContext'
 import { useWishListContext } from '../../hooks/useWishListContext'
+import WishlistIcon from '../../components/WishlistIcon'
 
 const MovieDetailPage: React.FC = () => {
   const location = useLocation();
@@ -14,11 +15,20 @@ const MovieDetailPage: React.FC = () => {
   const { category } = location.state
 
   const { selectedMovie } = useMovieContext()
-  const { addWishList } = useWishListContext()
+  const { wishList, addWishList, removeWishList } = useWishListContext()
 
   const { movieDetail, isLoading, error } = useMovieDetailApi(id)
 
+  const isInWishList = useMemo(() => {
+    return wishList.some((movie) => movie.id === Number(id))
+  }, [id, wishList])
+
   const handleAddToWishList = () => {
+    if (isInWishList) {
+      removeWishList(Number(id))
+      return
+    }
+
     if (selectedMovie) {
       addWishList(selectedMovie)
     }
@@ -35,6 +45,7 @@ const MovieDetailPage: React.FC = () => {
         return 'upcoming';
     }
   }, [category]);
+
 
   if (isLoading) return <div>Loading...</div>
   if (error || !movieDetail) return <div>Movie not found.</div>
@@ -64,9 +75,12 @@ const MovieDetailPage: React.FC = () => {
             <p className="movie-detail-overview">{movieDetail.overview}</p>
             <p><strong>Release Date:</strong> {movieDetail.release_date}</p>
             <p><strong>Rating:</strong> {movieDetail.vote_average} / 10</p>
-            <button className="add-to-wishlist-btn" onClick={handleAddToWishList}>
-              Add to Wish List
-            </button>
+            <div className='action-buttons'>
+              <button className="add-to-wishlist-btn" onClick={handleAddToWishList}>
+                {isInWishList ? 'Remove from Wishlist' : 'Add to Wishlist'}
+              </button>
+              <WishlistIcon onClick={handleAddToWishList} className='wishlist-icon' height={30} width={30} strokeWidth='2' fill={isInWishList ? '#cc2e2e' : 'none'} />
+            </div>
           </div>
         </div>
       </div>
