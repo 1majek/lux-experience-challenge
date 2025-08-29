@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { useMovieDetailApi } from '../../api/movies/movie-detail/useMovieDetailApi'
-import { popularMoviesTitle, topRatedMoviesTitle, upcomingMoviesTitle } from '../../utils'
+import { getImageUrl, popularMoviesTitle, topRatedMoviesTitle, upcomingMoviesTitle } from '../../utils'
 import Carousel from '../../components/carousel/Carousel'
 import Card from '../../components/card/Card'
 import { useWishListContext } from '../../hooks/useWishListContext'
@@ -60,7 +60,7 @@ const MovieDetailPage: React.FC = () => {
   // Set dynamic background style
   const backgroundStyle = movieDetail.backdrop_path
     ? {
-      backgroundImage: `url(https://image.tmdb.org/t/p/original${movieDetail.backdrop_path})`,
+      backgroundImage: `url(${getImageUrl(movieDetail.backdrop_path)})`,
       backgroundSize: categoryClass === "popular" ? 'auto' : "cover",
       backgroundPosition: categoryClass === "upcoming" ? 'top' : 'bottom',
       backgroundRepeat: 'no-repeat',
@@ -73,7 +73,7 @@ const MovieDetailPage: React.FC = () => {
         <div className='movie-detail-container'>
           <img
             className="movie-detail-poster"
-            src={movieDetail.poster_path ? `https://image.tmdb.org/t/p/w500${movieDetail.poster_path}` : placeholderImage}
+            src={movieDetail.poster_path ? `${getImageUrl(movieDetail.poster_path, 'w500')}` : placeholderImage}
             alt={movieDetail.title}
           />
 

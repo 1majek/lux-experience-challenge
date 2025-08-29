@@ -4,6 +4,7 @@ import type { CastMember, Movie } from '../../api/movies/interfaces'
 import { useNavigate } from 'react-router-dom'
 import placeholderImage from './../../assets/placeholder-img.png'
 import { useMovieContext } from '../../hooks/useMovieContext'
+import { getImageUrl } from '../../utils'
 
 interface CardProps {
   content: Pick<Movie, 'id' | 'title' | 'poster_path'> | CastMember
@@ -28,7 +29,7 @@ const Card: React.FC<CardProps> = ({ content, category }) => {
   }
 
   const imageUrl = normalized.imagePath
-    ? `https://image.tmdb.org/t/p/w200${normalized.imagePath}`
+    ? getImageUrl(normalized.imagePath, 'w200')
     : placeholderImage;
 
   const handleCardClick = () => {
