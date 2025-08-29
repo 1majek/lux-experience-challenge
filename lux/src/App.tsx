@@ -8,6 +8,8 @@ import { Provider } from 'react-redux'
 import { store } from './store'
 import Header from './components/header/Header'
 import WishListPage from './pages/wish-list/WishList'
+import ErrorBoundary from './components/error/ErrorBoundary'
+import ErrorBoundaryFallback from './components/error/ErrorBoundaryFallback/ErrorBoundaryFallback'
 
 const queryClient = new QueryClient()
 
@@ -18,11 +20,13 @@ function App() {
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
           <Header />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/movie/:id" element={<MovieDetailPage />} />
-            <Route path="/wishlist" element={<WishListPage />} />
-          </Routes>
+          <ErrorBoundary FallbackComponent={ErrorBoundaryFallback} >
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/movie/:id" element={<MovieDetailPage />} />
+              <Route path="/wishlist" element={<WishListPage />} />
+            </Routes>
+          </ErrorBoundary>
         </QueryClientProvider>
       </Provider>
     </StrictMode>
