@@ -63,3 +63,25 @@
     }
   }
 }
+
+@media (max-width: 600px) {
+  .header {
+    padding: 1rem 1rem;
+    &__logo {
+      h1 {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #e50914;
+      }
+    }
+
+    &__nav {
+      .header__wishlist-link {
+        padding: 0 0;
+        .header__wishlist-text {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}

@@ -93,3 +93,15 @@
     }
   }
 }
+
+@media (max-width: 600px) {
+  .movie-detail-page {
+    .movie-detail-container {
+      flex-direction: column;
+    }
+
+    .movie-detail-container {
+      align-items: center;
+    }
+  }
+}
