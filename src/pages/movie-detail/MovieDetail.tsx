@@ -1,3 +1,4 @@
+import './MovieDetail.scss'
 import React, { useMemo } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { useMovieDetailApi } from '../../api/movies/movie-detail/useMovieDetailApi'
@@ -11,7 +12,6 @@ import Loading from '../../components/loading/Loading'
 import ErrorDisplay from '../../components/error/ErrorDisplay/ErrorDisplay'
 import placeholderImage from '../../assets/placeholder-img.png'
 import { useMovieContext } from '../../hooks/useMovieContext'
-import './MovieDetail.scss'
 
 const MovieDetailPage: React.FC = () => {
   const location = useLocation();
@@ -69,13 +69,13 @@ const MovieDetailPage: React.FC = () => {
             <p><strong>Rating:</strong> {movieDetail.vote_average.toFixed(1)} / 10</p>
             <div className='action-buttons'>
               <button className={`add-to-wishlist-btn ${categoryClass}`} onClick={() => selectedMovie && addOrRemoveWishList(selectedMovie)}>
-                <span>{id && isInWishList(id) ? 'Remove from Wishlist' : 'Add to Wishlist'}</span>
+                <span>{isInWishList(Number(id)) ? 'Remove from Wishlist' : 'Add to Wishlist'}</span>
                 <WishlistIcon
                   className="wishlist-icon-btn"
                   height={18}
                   width={18}
                   strokeWidth='2'
-                  fill={id && isInWishList(id) ? 'currentColor' : 'none'}
+                  fill={isInWishList(Number(id)) ? 'currentColor' : 'none'}
                 />
               </button>
             </div>

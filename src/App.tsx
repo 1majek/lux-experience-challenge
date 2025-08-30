@@ -1,4 +1,5 @@
-import './App.css'
+import './App.scss'
+import './index.scss'
 import Home from './pages/home/Home'
 import { Route, Routes } from 'react-router-dom'
 import MovieDetailPage from './pages/movie-detail/MovieDetail'

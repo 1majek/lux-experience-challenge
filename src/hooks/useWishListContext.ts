@@ -20,12 +20,12 @@ export const useWishListContext = () => {
     dispatch(clearWishListContext())
   }
 
-  const isInWishList = useCallback((id: string) => {
-    return wishList.some((movie) => movie.id === Number(id))
+  const isInWishList = useCallback((id: number) => {
+    return wishList.some((movie) => movie.id === id)
   }, [wishList])
 
   const addOrRemoveWishList = (movie: Movie) => {
-    if (isInWishList(movie.id.toString())) {
+    if (isInWishList(movie.id)) {
       removeWishList(movie.id)
       return false
     }

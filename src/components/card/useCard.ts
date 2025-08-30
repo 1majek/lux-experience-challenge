@@ -25,7 +25,6 @@ export const useCard = ({ content, category }: Props) => {
   const wishIconRef = useRef<SVGSVGElement | null>(null)
   const { isInWishList, addOrRemoveWishList } = useWishListContext()
 
-
   const currentPage = useMemo(() => {
     return location.pathname.split('/')[1]
   }, [location])
@@ -57,11 +56,10 @@ export const useCard = ({ content, category }: Props) => {
   }
 
   const movieInWishList = useMemo(() => {
-    return isInWishList(String(normalized.id))
+    return isInWishList(normalized.id)
   }, [isInWishList, normalized.id])
 
   useEffect(() => {
-    if (!isMovie(content)) return;
     const currentWishIconRef = wishIconRef?.current;
     currentWishIconRef?.addEventListener('click', (e) => {
       addOrRemoveWishList(content as Movie)
@@ -72,8 +70,7 @@ export const useCard = ({ content, category }: Props) => {
     return () => {
       currentWishIconRef?.removeEventListener('click', () => { })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [addOrRemoveWishList, content])
 
   return {
     currentPage,
