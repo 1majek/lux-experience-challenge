@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import { upcomingMovies } from '.'
+import { fetchUpcomingMovies } from '.'
 
 export const useUpcomingMoviesApi = () => {
   const result = useQuery({
     queryKey: ['upcoming-movies'],
-    queryFn: upcomingMovies
+    queryFn: fetchUpcomingMovies
   })
 
   return {
