@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react'
+import React, { useMemo } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { useMovieDetailApi } from '../../api/movies/movie-detail/useMovieDetailApi'
 import { getImageUrl, popularMoviesTitle, topRatedMoviesTitle, upcomingMoviesTitle } from '../../utils'
@@ -17,7 +17,7 @@ const MovieDetailPage: React.FC = () => {
   const { id } = useParams<{ id?: string }>()
   const category = location.state?.category
 
-  const { wishList, addWishList, removeWishList } = useWishListContext()
+  const { wishList, addOrRemoveWishList } = useWishListContext()
   const { selectedMovie } = useMovieContext()
 
   const { movieDetail, isLoading, error } = useMovieDetailApi(id)
@@ -25,17 +25,6 @@ const MovieDetailPage: React.FC = () => {
   const isInWishList = useMemo(() => {
     return wishList.some((movie) => movie.id === Number(id))
   }, [id, wishList])
-
-  const handleToggleWishList = useCallback(() => {
-    if (isInWishList) {
-      removeWishList(Number(id))
-      return
-    }
-
-    if (selectedMovie) {
-      addWishList(selectedMovie)
-    }
-  }, [isInWishList, removeWishList, id, addWishList, selectedMovie]);
 
   // Conditional styling based on movie rating
   const categoryClass = useMemo(() => {
@@ -83,7 +72,7 @@ const MovieDetailPage: React.FC = () => {
             <p><strong>Release Date:</strong> {movieDetail.release_date}</p>
             <p><strong>Rating:</strong> {movieDetail.vote_average.toFixed(1)} / 10</p>
             <div className='action-buttons'>
-              <button className={`add-to-wishlist-btn ${categoryClass}`} onClick={handleToggleWishList}>
+              <button className={`add-to-wishlist-btn ${categoryClass}`} onClick={() => selectedMovie && addOrRemoveWishList(selectedMovie)}>
                 <span>{isInWishList ? 'In Wishlist' : 'Add to Wishlist'}</span>
                 <WishlistIcon
                   className="wishlist-icon-btn"

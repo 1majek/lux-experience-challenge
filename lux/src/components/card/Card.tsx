@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useEffect, useMemo } from 'react'
 import './Card.scss'
 import type { CastMember, Movie } from '../../api/movies/interfaces'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import placeholderImage from './../../assets/placeholder-img.png'
 import { useMovieContext } from '../../hooks/useMovieContext'
 import { getImageUrl } from '../../utils'
+import { useWishListContext } from '../../hooks/useWishListContext'
+import WishlistIcon from '../WishlistIcon'
 
 interface CardProps {
-  content: Pick<Movie, 'id' | 'title' | 'poster_path'> | CastMember
+  content: Pick<Movie, 'id' | 'title' | 'poster_path'> | CastMember,
+  categoryColor?: string,
   category?: string,
 }
 
@@ -16,9 +19,16 @@ function isMovie(content: CardProps['content']): content is Pick<Movie, 'id' | '
   return 'title' in content;
 }
 
-const Card: React.FC<CardProps> = ({ content, category }) => {
+const Card: React.FC<CardProps> = ({ content, category, categoryColor }) => {
   const navigate = useNavigate()
+  const location = useLocation();
   const { addMovie } = useMovieContext()
+  const wishIconRef = React.useRef<SVGSVGElement | null>(null)
+  const { isInWishList, addOrRemoveWishList } = useWishListContext()
+
+  const currentPage = useMemo(() => {
+    return location.pathname.split('/')[1]
+  }, [location])
 
   // Normalize content to a consistent shape for easier use in JSX
   const normalized = {
@@ -46,6 +56,24 @@ const Card: React.FC<CardProps> = ({ content, category }) => {
     }
   }
 
+  const movieInWishList = useMemo(() => {
+    return isInWishList(String(normalized.id))
+  }, [isInWishList, normalized.id])
+
+  useEffect(() => {
+    if (!isMovie(content)) return;
+    const currentWishIconRef = wishIconRef?.current;
+    currentWishIconRef?.addEventListener('click', (e) => {
+      addOrRemoveWishList(content as Movie)
+      e.stopPropagation();
+    })
+
+    // Stop listenning when component is unmont
+    return () => {
+      currentWishIconRef?.removeEventListener('click', () => { })
+    }
+  }, [])
+
   return (
     <div
       className="card-item"
@@ -61,7 +89,10 @@ const Card: React.FC<CardProps> = ({ content, category }) => {
         alt={normalized.title || 'Poster'}
         className="card-poster"
       />
-      <div className="card-title">{normalized.title}</div>
+      <div className="card-title" title={normalized.title}>{normalized.title}</div>
+      {isMovie(content) && currentPage !== 'wishlist' && (
+        <WishlistIcon ref={wishIconRef} className='wishlist-icon' strokeColor={categoryColor} strokeWidth='3' opacity={movieInWishList ? '1' : '0.5'} fill={movieInWishList ? categoryColor : 'none'} />
+      )}
     </div>
   )
 }

@@ -17,18 +17,21 @@ const Home: React.FC = () => {
       movies: popular.popularMovies,
       isLoading: popular.isPopularMoviesLoading,
       isError: popular.isPopularMoviesError,
+      categoryColor: "yellow"
     },
     {
       title: topRatedMoviesTitle,
       movies: topRated.topRatedMovies,
       isLoading: topRated.isTopRatedMoviesLoading,
       isError: topRated.isTopRatedMoviesError,
+      categoryColor: "magenta"
     },
     {
       title: upcomingMoviesTitle,
       movies: upcoming.upcomingMovies,
       isLoading: upcoming.isUpcomingMoviesLoading,
       isError: upcoming.isUpcomingMoviesError,
+      categoryColor: "pink"
     },
   ];
 

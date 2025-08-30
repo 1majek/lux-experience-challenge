@@ -1,4 +1,5 @@
 .card-item {
+  position: relative;
   min-width: 160px;
   max-width: 180px;
   flex: 0 0 auto;
@@ -16,6 +17,7 @@
   &:focus {
     transform: scale(1.05);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0, 0, 0, 0.12);
   }
   .card-poster {
     width: 100%;
@@ -26,6 +28,7 @@
     aspect-ratio: 2/3;
     background: #eee;
   }
+
   .card-title {
     font-size: 1rem;
     text-align: center;
@@ -37,5 +40,17 @@
     text-overflow: ellipsis;
     max-width: 190px;
     white-space: nowrap;
+  }
+
+  .wishlist-icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+    cursor: pointer;
+    padding: 1rem;
+    &:hover {
+      opacity: 1;
+      transition: opacity 0.2s;
+    }
   }
 }
