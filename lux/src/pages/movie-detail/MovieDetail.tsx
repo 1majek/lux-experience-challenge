@@ -14,17 +14,12 @@ import './MovieDetail.scss'
 
 const MovieDetailPage: React.FC = () => {
   const location = useLocation();
+  const category = location.state?.category as string
   const { id } = useParams<{ id?: string }>()
-  const category = location.state?.category
 
-  const { wishList, addOrRemoveWishList } = useWishListContext()
+  const { isInWishList, addOrRemoveWishList } = useWishListContext()
   const { selectedMovie } = useMovieContext()
-
   const { movieDetail, isLoading, error } = useMovieDetailApi(id)
-
-  const isInWishList = useMemo(() => {
-    return wishList.some((movie) => movie.id === Number(id))
-  }, [id, wishList])
 
   // Conditional styling based on movie rating
   const categoryClass = useMemo(() => {
@@ -73,13 +68,13 @@ const MovieDetailPage: React.FC = () => {
             <p><strong>Rating:</strong> {movieDetail.vote_average.toFixed(1)} / 10</p>
             <div className='action-buttons'>
               <button className={`add-to-wishlist-btn ${categoryClass}`} onClick={() => selectedMovie && addOrRemoveWishList(selectedMovie)}>
-                <span>{isInWishList ? 'In Wishlist' : 'Add to Wishlist'}</span>
+                <span>{id && isInWishList(id) ? 'Remove from Wishlist' : 'Add to Wishlist'}</span>
                 <WishlistIcon
                   className="wishlist-icon-btn"
                   height={18}
                   width={18}
                   strokeWidth='2'
-                  fill={isInWishList ? 'currentColor' : 'none'}
+                  fill={id && isInWishList(id) ? 'currentColor' : 'none'}
                 />
               </button>
             </div>

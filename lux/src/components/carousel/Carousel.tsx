@@ -1,6 +1,7 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import './Carousel.scss'
 import Loading from '../loading/Loading'
+import { useCarousel } from './useCarousel'
 
 interface CarouselProps {
   isLoading: boolean,
@@ -9,17 +10,7 @@ interface CarouselProps {
 }
 
 const Carousel: React.FC<CarouselProps> = ({ isLoading, title, children }) => {
-  const scrollRef = useRef<HTMLDivElement>(null)
-
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current
-      scrollRef.current.scrollTo({
-        left: direction === 'left' ? scrollLeft - clientWidth : scrollLeft + clientWidth,
-        behavior: 'smooth',
-      })
-    }
-  }
+  const { scrollRef, scroll } = useCarousel()
 
   return (
     <section className="carousel-section">
