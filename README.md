@@ -68,7 +68,7 @@ src/
 1. **Clone the repository:**
 
    ```cmd
-   git clone https://gitfront.io/r/1majek/nufyK71M7cst/lux-experience-challenge/
+   git clone https://gitfront.io/r/1majek/NybvUKdsaUea/lux-experience-challenge/
    cd lux-experience-challenge
    ```
 
