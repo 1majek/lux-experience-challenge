@@ -1,80 +1,70 @@
-import fs from "node:fs/promises"; // NodeJS async file system module, 'interact' static files
-import express from "express"; // Express is NodeJS library for building api
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import express from "express";
+import { createServer as createViteServer } from "vite";
 
-/**
-  This file is used to set up a NodeJS Express server to handle SSR for our React application. 
-  It dynamically selects the appropriate SSR render function and template based on the environment (development or production)
-  and serves the rendered HTML to clients upon request.
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-  The server is set up to serve the client-side assets in production and use Vite's middleware in development.
-  The server also reads the SSR manifest file in production to determine the appropriate render function to use.
- */
+async function createServer() {
+  const app = express();
 
-// Constants
-const isProduction = process.env.NODE_ENV === "production";
-const port = process.env.PORT || 5173;
-const base = process.env.BASE || "/";
-
-// Cached production assets
-const templateHtml = isProduction
-  ? await fs.readFile("./dist/client/index.html", "utf-8")
-  : "";
-const ssrManifest = isProduction
-  ? await fs.readFile("./dist/client/.vite/ssr-manifest.json", "utf-8")
-  : undefined;
-
-// Create http server
-const app = express();
-
-// Add Vite or respective production middlewares
-let vite;
-if (!isProduction) {
-  const { createServer } = await import("vite");
-  vite = await createServer({
+  // Create Vite server in middleware mode and configure the app type.
+  const vite = await createViteServer({
     server: { middlewareMode: true },
     appType: "custom",
-    base,
   });
+
+  // Use vite's connect instance as middleware
   app.use(vite.middlewares);
-} else {
-  const compression = (await import("compression")).default;
-  const sirv = (await import("sirv")).default;
-  app.use(compression());
-  app.use(base, sirv("./dist/client", { extensions: [] }));
+
+  app.use("/{*any}", async (req, res, next) => {
+    const url = req.originalUrl;
+
+    try {
+      // Read index.html
+      let template = await fs.readFile(
+        path.resolve(__dirname, "index.html"),
+        "utf-8"
+      );
+
+      // Apply Vite HTML transforms.
+      template = await vite.transformIndexHtml(url, template);
+
+      // Load the server entry.
+      const { render } = await vite.ssrLoadModule("/src/entry-server.tsx");
+
+      // Render the app HTML and get state.
+      const {
+        html: appHtml,
+        finalReduxState,
+        dehydratedState,
+      } = await render(url, {});
+
+      // Inject the app-rendered HTML and state into the template.
+      const stateScript = `
+        <script>window.__PRELOADED_STATE__ = ${JSON.stringify(
+          finalReduxState
+        ).replace(/</g, "\\u003c")}</script>
+        <script>window.__DEHYDRATED_STATE__ = ${JSON.stringify(
+          dehydratedState
+        )}</script>
+      `;
+      const html = template
+        .replace(`<!--ssr-outlet-->`, appHtml)
+        .replace(`</head>`, `${stateScript}</head>`);
+
+      // Send the rendered HTML back.
+      res.status(200).set({ "Content-Type": "text/html" }).end(html);
+    } catch (e) {
+      vite.ssrFixStacktrace(e);
+      next(e);
+    }
+  });
+
+  app.listen(5173, () =>
+    console.log("Server is running at http://localhost:5173")
+  );
 }
 
-// Serve HTML
-app.use("*all", async (req, res) => {
-  try {
-    const url = req.originalUrl.replace(base, "");
-
-    let template;
-    let render;
-    if (!isProduction) {
-      // Always read fresh template in development
-      template = await fs.readFile("./index.html", "utf-8");
-      template = await vite.transformIndexHtml(url, template);
-      render = (await vite.ssrLoadModule("/src/entry-server.tsx")).render;
-    } else {
-      template = templateHtml;
-      render = (await import("./dist/server/entry-server.js")).render;
-    }
-
-    const rendered = await render(url, ssrManifest);
-
-    const html = template
-      .replace(`<!--app-head-->`, rendered.head ?? "")
-      .replace(`<!--app-html-->`, rendered.html ?? "");
-
-    res.status(200).set({ "Content-Type": "text/html" }).send(html);
-  } catch (e) {
-    vite?.ssrFixStacktrace(e);
-    console.log(e.stack);
-    res.status(500).end(e.stack);
-  }
-});
-
-// Start http server
-app.listen(port, () => {
-  console.log(`Server started at http://localhost:${port}`);
-});
+createServer();
