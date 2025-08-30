@@ -149,3 +149,9 @@ npm run dev
 ## Contact
 
 For any questions, please contact majek1@hotmail.com.
+
+<!-- Add image to .md -->
+
+![Home page Screenshot](public/home-page.png)
+![Detail page Screenshot](public/detail-page.png)
+![Wish list page Screenshot](public/wishlist-page.png)
