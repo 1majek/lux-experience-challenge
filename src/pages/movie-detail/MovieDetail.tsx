@@ -20,7 +20,7 @@ const MovieDetailPage: React.FC = () => {
 
   const { isInWishList, addOrRemoveWishList } = useWishListContext()
   const { selectedMovie } = useMovieContext()
-  const { movieDetail, isLoading, error } = useMovieDetailApi(id)
+  const { movieDetail, isFetching, error } = useMovieDetailApi(id)
 
   // Conditional styling based on movie rating
   const categoryClass = useMemo(() => {
@@ -34,7 +34,7 @@ const MovieDetailPage: React.FC = () => {
     }
   }, [category]);
 
-  if (isLoading) {
+  if (isFetching) {
     return <Loading />;
   }
 
@@ -83,7 +83,7 @@ const MovieDetailPage: React.FC = () => {
         </div>
       </div>
 
-      <Carousel title='Casts' isLoading={isLoading}>
+      <Carousel title='Casts' isLoading={isFetching}>
         {movieDetail?.credits.cast.map((cast) => (
           <Card key={cast.id} content={cast} />
         ))}

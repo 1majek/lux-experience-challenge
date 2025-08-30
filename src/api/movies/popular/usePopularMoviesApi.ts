@@ -10,7 +10,7 @@ export const usePopularMoviesApi = () => {
   return {
     ...result,
     popularMovies: result.data || [],
-    isPopularMoviesLoading: result.isLoading,
+    isPopularMoviesLoading: result.isFetching,
     isPopularMoviesError: result.isError,
   }
 }

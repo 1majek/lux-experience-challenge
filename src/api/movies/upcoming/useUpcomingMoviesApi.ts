@@ -10,7 +10,7 @@ export const useUpcomingMoviesApi = () => {
   return {
     ...result,
     upcomingMovies: result.data || [],
-    isUpcomingMoviesLoading: result.isLoading,
+    isUpcomingMoviesLoading: result.isFetching,
     isUpcomingMoviesError: result.isError,
   }
 }

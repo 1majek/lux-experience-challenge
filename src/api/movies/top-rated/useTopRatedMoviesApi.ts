@@ -10,7 +10,7 @@ export const useTopRatedMoviesApi = () => {
   return {
     ...result,
     topRatedMovies: result.data || [],
-    isTopRatedMoviesLoading: result.isLoading,
+    isTopRatedMoviesLoading: result.isFetching,
     isTopRatedMoviesError: result.isError,
   }
 }
