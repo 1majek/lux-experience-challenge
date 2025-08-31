@@ -150,7 +150,7 @@ npm run dev
 
 For any questions, please contact majek1@hotmail.com.
 
-<!-- Add image to .md -->
+## Screenshots
 
 ![Home page Screenshot](public/home-page.png)
 ![Detail page Screenshot](public/detail-page.png)
